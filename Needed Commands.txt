@@ -1,0 +1,253 @@
+Create the keypair and use in this case putty to convert it to ppk
+Create an aws instance
+Use putty to create the connection, you need the Public IPv4 DNS, username ec2-user and  the sshkey
+Manage security groups to ipv4 and ipv6 with port 8080
+
+
+To install jenkins in the aws instance
+
+become a root user with sudo su -
+
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+sudo amazon-linux-extras install epel
+sudo amazon-linux-extras install java-openjdk11 or sudo yum install fontconfig java-17-openjdk
+Foir
+yum install jenkins
+
+
+To activate jenkins
+service jenkins status
+service jenkins start
+
+To check the Jenkins UI and create job, you have to access
+http://3.144.74.76:8080/
+then for the first time do a cat to the path is shown there for the password
+then install the plugins
+
+To install git
+yum install git
+after installation you can find where is it installed with whereis git
+add the git plugin
+in jenkins job configuration in source location just put git
+
+To install maven in jenkins, check the maven downloads, and chose the binary tar,gz archive bin and copy link address
+then in the linux terminal go to be root 
+then cd/opt, 
+then use wget thelinkofmaven
+then to install use tar -xvzf and the name of the downloaded maven file in this case apache-maven-3.9.3-bin.tar.gz 
+you can rename the maven by typing mv apache-maven-3.9.3 maven
+cd maven, cd bin and then ./mvn -v to execute
+
+update enviroment variables to add java path 
+go to root cd ~
+ll -a
+vi .bash_profile
+to start editing press i and then start editing below fi
+M2_HOME=/opt/maven
+M2=/opt/maven/bin
+also you need to find the java path
+in root folder you can use   then get the one with usr/lib/jvm
+then to find the correct path do a find / -name java-11*
+/usr/lib/jvm/java-17-amazon-corretto.x86_64
+JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto.x86_64
+then in path you must add :$JAVA_HOME:$M2_HOME:$M2
+PATH =$PATH:$HOME/bin:$JAVA_HOME:$M2_HOME:$M2
+export PATH
+after finishing press esc, then : then wq
+then type source .bash_profile
+then in jenkins download the plugin
+and in root for maven put /opt/maven
+
+To install tomcat
+create a new instance
+install java probably usind sudo before every command
+donwload tomcat tar
+unzip tomcat tar
+cd to bin folder
+./startup.sh to start tomcat
+./shutdown.sh to kill tomcat
+check with the ip address and the 8080 port the tomcat ui
+then you need to update the context in the tomcat folder bin find the host-manager and manager context.xml by commenting the ports
+then you need to update the users in conf/tomcat-users.xml
+
+after that you need to install the tomcat plugin in jenkins
+then configure the deployer credentials
+then specify the git repo and the post build action of deploy to war/ear container
+you can use **/*.war
+then use the deployer credentials
+then use the tomcat url
+
+Installing docker
+yum install docker -y
+service docker status to check
+service docker to start
+docker images to check the images
+docker ps to check the docker containers running or -a all the containers
+docker run -d (detached mode with the d) --name tomcat-container -p (port) 8081:8080 tomcat
+
+To fix the issue with the 404 after being deployed
+docker exec -it tomcat-container /bin/bash
+then cd webapps.dist
+then cp -R * ../webapps
+
+For the docker instance
+dowload centos
+go to root folder and the create the DockerFile as vi DockerFile
+FROM centos
+RUN cd /etc/yum.repos.d/
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+RUN yum -y install java
+RUN mkdir /opt/tomcat
+WORKDIR /opt/tomcat
+ADD https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.78/bin/apache-tomcat-9.0.78.tar.gz .
+RUN tar -xvzf apache-tomcat-9.0.78.tar.gz
+RUN mv apache-tomcat-9.0.78/* /opt/tomcat
+EXPOSE 8080
+CMD  ["/opt/tomcat/bin/catalina.sh","run"]
+docker build -t mytomcat .
+docker run -d --name mytomcat-server -p 8083:8080 mytomcat
+
+FROM tomcat:latest
+RUN cp -R /usr/local/tomcat/webapps.dist/* /usr/local/tomcat/webapps 
+
+To check the users
+cat /etc/password
+To check the group
+cat /etc/group
+
+To create docker user
+useradd dockeradmin
+To set the password
+passwd dockeradmin (the docker user)
+
+To add the user to the dockergroup
+  (the docker user)
+
+EC2 doesnt allow explicit password auth, to enable it:
+vi /etc/ssh/sshd_config
+
+Then in jenkins download de publish ssh plugin
+Then in setup configure de dockeradmin user and password
+Then in the jenkins job
+	Source files: webapp/target/*.war
+	Remove prefix: webapp/target
+	Remote directory: //opt//docker
+
+Then go to /opt and mkdir docker
+then change owner to docker admin with
+chown -R dockeradmin:dockeradmin docker
+Then in root, move dockerfile to /opt/docker
+mv Dockerfile /opt/docker/
+then change owner again in the new location with
+chown -R dockeradmin:dockeradmin /opt/docker
+then update the dockerfile and add
+COPY ./*.war /usr/local/tomcat/webapps
+then create the image with  
+docker build -t tomcat:v1 .
+then create and run the container with
+docker run -d --name  tomcatv1 -p 8086:8080 tomcat:v1
+then to test, check in the docker instance with the public ip, the 8086 port
+then with /webapp
+
+To automatically create an image and run a docker container in a jenkins job
+add in post build actions, execute commands:
+cd /opt/docker; 
+docker build -t regapp:v1 .;
+docker run -d --name registerapp -p 8087:8080 regapp:v1
+
+To remove the container and create it again when there has been changes in the repo
+cd /opt/docker;
+docker build -t regapp:v1 .;
+docker stop registerapp;
+docker rm registerapp;
+docker run -d --name registerapp -p 8087:8080 regapp:v1
+
+After creating the ansible server
+you must create the user ansadmin
+the password admin
+then sudo service sshd restart
+then visudo
+and add ansadmin with password all and user all, in the part where this is shown (ALL)
+
+To install ansible
+amazon-linux-extras install ansible2
+Then in the docker server
+become root
+add ansadmin
+with pass admin
+then visudo get to the wheel all part
+add ansadmin ALL=(ALL) NOPASSWD ALL
+then get the ip address in dockerhost with ifconfig, the inet 
+then switch to ansadmin and
+vi /etc/ansible/hosts and delete everything and just copy the 172.31.17.194 (the inet ip)
+then change to ansadmin to sudo su - ansadmin and copy the ssh with
+ssh-copy-id 172.31.17.194 (the inet ip)
+To check if it worked correctly, run:
+ansible all -m ping
+the cd opt and mkdir docker
+sudo chown ansibleadmin:ansibleadmin docker
+
+To add ansible to jenkins go to manage jenkins, configure systems
+add in the ssh server part ansible-server and the private ip
+then the ansibleadmin user and the password admin.
+Then create the job as the one from build a deploy
+Change the ssh server to ansible server and remove the poll scm trigger
+
+Go to the ansible session
+sudo yum install docker
+usermod -aG docker ansibleadmin
+sudo service docker start
+and then create the container
+
+To create and run the ansible playbook
+add the ip of the ansible server to the hosts 
+then vi regapp.yml
+---
+- hosts: ansible
+
+  tasks:
+   -  name: create docker image
+      command: docker build -t regapp:latest .
+      args:
+        chdir: /opt/docker
+
+then ansible-playbook regapp.yml --check to check if everything is ok
+then ansible-playbook regapp.yml
+Then to push the image to the docker hub
+docker login then username and pass
+then
+docker tag (container id) oscarcheva/regapp:latest
+
+Then in the jenkins configuration put  
+ansible-playbook /opt/docker/regapp.yml
+
+After that we must create a playbook to create the container so:
+remove al container and images in your dockerhost then
+vi deploy_regapp.yml and the content is: 
+- hosts: dockerhost
+
+  tasks:
+    - name: stop existing container
+      command: docker stop regapp-server
+      ignore_errors: yes
+
+    - name: remove the container
+      command: docker rm regapp-server
+      ignore_errors: yes
+
+    - name: remove image
+      command: docker rmi oscarcheva/regapp:latest
+      ignore_errors: yes
+
+    - name: create container
+      command: docker run -d --name regapp-server -p 8082:8080 oscarcheva/regapp:latest
+
+To set up Kubernetes
+
+
+
+ 
+
+

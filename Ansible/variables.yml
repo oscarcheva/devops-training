@@ -1,0 +1,4 @@
+script1_path: "/home/ubuntu/script1.sh"
+script2_path: "/home/ubuntu/test-project/script2.sh"
+ansible_ssh_options: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+

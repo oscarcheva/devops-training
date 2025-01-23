@@ -1,0 +1,217 @@
+sudo su - -> Becomes root user
+ls / -> List files in parent directory
+pwd -> Present working directory
+ls /etc/release -> the release folder may vary but in something with release on it will check the OS
+cd .. -> goes back a folder
+root  is the administrator user
+home is the directory for users
+user is where the software is installed
+bin contains commands used by all users
+sbin contains commands used by super user
+var contains variable data
+date -> shows the current date and time
+cal -> displays current calendar
+uptime -> shows how long the system is up and running
+whomai -> shows the user currently logged in 
+id -> all the information of the user
+who -> user and public ip
+man command -> shows all commands
+su (user) -> switches to another user
+
+ls -> list files directories in the current directory
+ls -l -> display files with information in alphabetical order
+ls -l -t -> display files ordered by dates.
+ls -r -> display files in reversed sequence.
+cat (filename) -> to view content of a file
+less (filename) -> to check the file page by page
+more (filename) -> the same but with a % indicator
+head (filename) -> shows the first ten lines of the file
+tail (filename) -> shows the las ten lines of the file
+
+touch (filename) -> creates a file
+cat (filename) -> displays the content of a file
+cat > (filename) -> creates file and allows to write, if it has content it will replace it
+cat >> (filename) -> creates file and allows to write, if it has content it will append it at the end of the file
+nano (filename) -> a file editor for files it has to be installed with easier shortcuts, if it doesn't exits it creates it. To install yum install nano -y
+vi (filename) -> a file editor that is already installed with several shorcuts, if it doesn't exits it creates it.
+
+mkdir (dirname) -> creates a directory (folder)
+mkdir -p (dirname tree) -> creates a directory tree  
+cd (dir name) -> changes the current directory
+rm (filename) -> removes a file
+rmdir (dirname) -> removes a directory
+rm -f -r -> removes files a directory forcefully
+
+cp (file1name) (file2name) -> copies replaces content of file2 for the one in file1
+cp -R (dir1) (dir2) -> copies the file of dir1 onto dir2
+mv (filename) (dirname) -> moves the file to that dir
+mv (file1) (file2) -> renames the file1 to file2
+
+find / -name  (filename) -> searchs a file by its name
+find / -user (username) -> searchs file owned by an user
+whereis (filename) - -> shows the location of the file
+diff (file1) (file2) -> shows diffs in two files
+file (filename or dirname) -> shows what kind of file or directory it is
+grep (Global regular expression print) (filename) -> find a word or pattern in a file
+grep -i (filenames) -> ignores cases
+ls -l | grep (word) -> Helps to find a dir
+ls -l | grep ^d -> Helps to find all dirs in a directory by searching the name on how the file or dir starts
+
+sed 's/word1/word2/' filename -> replaces the exact lone word with the second word only in output not actual content.
+sed 's/word1/word2/ig' filename -> replaces the word with the second word ignoring cases or other symbols only in output not actual content.
+sed 's/word1/ /' filename -> replaces the word with a blank space only in output not actual content.
+sed -i 's/word1/word2/' filename -> replaces the word with the second word ignoring cases or other symbols in actual content.
+
+useradd (option) (username) -> creates an user
+	Options are:
+	- -u: userid
+	- -G: Secondary group id
+	- -g: primary group id
+	- -d: home directory
+	- -c: comment
+	- -s shell
+usermod (option) (username) -> changes an attribute of an user
+passwd (username) -> sets the password for an user
+service sshd reload -> reloads the configuration of a service
+chmod (number for owner) (number for group) (number for others) (file or dirname) = changes the access modifier to the owner, group and or others for files or directories
+	Options:
+	- 0 = no permissions
+	- 4 = read only
+	- 5 = read an execute
+	- 6 = read and write
+	- 7 = read, write and execute
+
+chmod -R (number for owner) (number for group) (number for others) = changes the access modifier to the owner, group and or others and all folders and files it contains
+
+chown (username:groupname) (filename) = changes the owner of the file or dir
+
+free -> shows the free memory of the system
+free -m -> shows the free memory of the system on mb
+cat/proc/meminfo -> shows all the information of the memory
+cat/proc/cpuinfo -> shows all the information of the processor
+uname -a -> kernel information
+cat /etc/redhat-release
+whereis -> shows from where the command is executed
+
+yum install -> To install packages with it dependencies
+yum remove, update, info, list available, list installed
+
+hostname -> shows info of the server
+cat >> /etc/hostname -> edits the information of the server to what you want
+init 6 or reboot -> restarts the system to check the change in hostname
+wget and a link (filename) -> will download the content of that link to the system and assign a name to the file
+rpm -i telnet.rpm -> installs a package
+rpm -e telnet.rpm -> uninstalls a package
+rpm -qa | grep (package name) -> obtains the name of the installed package
+ifconfig -> to get the ip address
+netstat -tulpn -> shows the information of all the connecton
+telnet (location) (port) -> shows if the port is working
+
+When using services
+service (nameofservice) start -> To start the service
+service (nameofservice) stop-> To stop the service
+service (nameofservice) restart-> To restart the service, doing this will render the service down for a time
+service (nameofservice) reload-> To restart the service but not rendering the service unavailable.
+
+systemctl start (nameofservice) -> To start the service
+systemctl stop (nameofservice) -> To stop the service
+systemctl status (nameofservice) -> To check the status of the service
+systemctl enable (nameofservice) -> Configure service to start at startup
+systemctl disable (nameofservice) -> Configure service to not start at startup
+systemctl daemon-reload -> To restart the system to have a new service abled to start
+
+To create an app as a service
+Go to /etc/systemd/system
+create a my_app.service file and specify
+	[Unit]
+	Description=My python web app
+
+	[Service]
+	ExecStart=/usr/bin/python3 /opt/code/my_app.py
+	Restart=always
+
+	[Install]
+	WantedBy=multi-user.target
+
+ip link -> creates the link for the switch.
+ip addr add 192.168.1.10/24 dev eth0 and then 192.168.1.11/24 dev eth0-> adds the addresses to the switch
+ping 192.168.11 -> check if the communication was created
+ip route add 192.168.2.0/24 via 192.168.1.1 -> Creates a route so two networks can connect
+/proc/sys/net/ipv4/ip_forwards = 0 -> Means that there no response will be forwarded in a network, 1 means it will
+
+/etc/hosts -> The file for the ip address with host name
+/etc/resolv.conf -> The file for the name servers
+/etc/nsswitch.conf -> The file where the order for dns and local files is established
+
+Processes
+ps -ef -> Lists al processes
+kill (process id) -9 -> Kills the process by id
+bg %(process number) -> Process will run in the background
+fg %(process number) -> Process will run in the foreground
+top -> Will show the top 20 process that consumes most cpu
+
+Archiving files and directories
+yum install gzip -y
+gzip -> Creates a compressed file
+gunzip -> unzips a file
+tar -> extracts a tar file	
+tar -cvf (dirname.tar) (dirname) -> creates a compressed directory 
+tar -xvf  (dirname) -> extracts the file in a directory
+tar -xvzf (dirname.tar) (dirname) -> creates a compressed directory 
+
+Crontab
+crond -> daemon to schedule tasks 
+crontab -l -> jobs created
+crontab -e: (* * * * * timeframe for the job) (job description) -> create a job
+
+SSH
+ssh-copy-id (ip address of receiving server) -> copy the ssh key from one server to another 
+ssh -i <keylocation> username@ip address of target server -> allows you to login to another server
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+** DOCKER **
+docker run - Runs a container from an image
+docker ps - List containers
+docker rm (id) - Removes a container
+docker images - Lists all images
+docker rmi name - Removes images
+docker pull - Just downloads an image
+docker exec (container) (command and location) - Executes a command iwthing the container
+docker run -d  - Runs a container in detached mode
+docker attach (container id) - Attaches the container ran in detached mode
+docker run -p 80:5000 runs a container to an specific port
+docker logs (container id) - Checks the logs of a container
+
+=================================================================================================
+
+sudo su loadmgr.
+home/loadmanager/tomcat/logs
+ps -ef | grep tomcat 
+ps -ef | grep loadm  
+history | grep aws
+echo "$(date +%d/%m/%Y)"
+zip (filename) (file)
+aws s3 cp testname.zip s3://s3-as-prod-lm-am1-575-14/ to upload in linux
+aws s3 cp s3://s3-as-prod-lm-am1-575-14/1.zip . to download in linux
+
+aws s3 cp D:/testname.zip s3://s3-as-prod-lm-am1-575-14/ to upload in linux
+aws s3 cp s3://s3-as-prod-lm-am1-575-14/1.zip D:\lps to download in windows
+
+
+
+
+s3://s3-as-dev-lm/cm/build/Release_build_v5.8.7.0/
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+

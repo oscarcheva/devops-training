@@ -1,0 +1,25 @@
+#!/bin/bash
+
+sudo apt update -y && sudo apt upgrade -y
+
+sudo apt install -y \
+  curl wget zip unzip gzip tar nano \
+  git python3 python3-pip \
+  software-properties-common
+
+if [ "${instance_name}" == "AnsibleServer" ]; then
+  sudo add-apt-repository --yes --update ppa:ansible/ansible
+  sudo apt install -y ansible
+  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  unzip awscliv2.zip
+  sudo ./aws/install
+  aws s3 cp s3://oscar-default-bucket/inventory.j2 /home/ubuntu
+  aws s3 cp s3://oscar-default-bucket/testPlaybook.yml /home/ubuntu
+  aws s3 cp s3://oscar-default-bucket/variables.yml /home/ubuntu
+  aws s3 cp s3://oscar-default-bucket/script1.sh /home/ubuntu
+  mkdir -p /home/ubuntu/test-project/
+  aws s3 cp s3://oscar-default-bucket/script2.sh /home/ubuntu/test-project/
+fi
+
+sudo hostnamectl set-hostname ${instance_name}
+sudo reboot

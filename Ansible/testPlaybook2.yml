@@ -1,0 +1,51 @@
+- name: Test run of an Ansible playbook on the Target servers
+  hosts: targets
+  become: yes
+  tasks:
+    - name: Execute local script one
+      delegate_to: localhost
+      script: /home/ubuntu/script1.sh
+      register: script1_output
+
+    - name: Display output of script one
+      debug:
+        msg: "Script 1 Output: {{ script1_output.stdout }}"
+      when: script1_output.rc == 0
+
+    - name: Install Java 11
+      apt:
+        name: openjdk-11-jdk
+        state: present
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Check Java version
+      shell: java -version
+      register: java_version
+      ignore_errors: yes
+
+    - name: Display Java version
+      debug:
+        msg: "{{ java_version.stdout_lines }}"
+      when: java_version.rc == 0
+
+    - name: Get the hostname
+      command: hostname
+      register: hostname_output
+
+    - name: Display hostname
+      debug:
+        msg: "The hostname of the server is: {{ hostname_output.stdout }}"
+
+    - name: Execute local script two
+      delegate_to: localhost
+      script: /home/ubuntu/script2.sh
+      register: script2_output
+
+    - name: Display output of script two
+      debug:
+        msg: "Script 2 Output: {{ script2_output.stdout }}"
+      when: script2_output.rc == 0
+
+    - name: Print completion message
+      debug:
+        msg: "The playbook has finished on host {{ hostname_output.stdout }}"

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+    name: my-app
+    labels:
+        app: my-app-pod
+        type: backend
+
+spec:
+    containers:
+        - name: hello-world-test
+          image: oscarcheva/hello-world-test
+          ports:
+            - containerPort: 8080  # Port exposed in the container
+              hostPort: 8082       # Port mapped on the host node
+          imagePullPolicy: IfNotPresent

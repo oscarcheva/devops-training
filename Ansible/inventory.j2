@@ -1,0 +1,5 @@
+[targets]
+{% for instance in running_instances %}
+{{ instance.name }} ansible_host={{ instance.public_ip }} ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/DevOpsKP.pem ansible_python_interpreter=/usr/bin/python3
+{% if not loop.last %}{% endif %}
+{% endfor %}

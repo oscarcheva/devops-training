@@ -1,0 +1,99 @@
+- name: Update Default Ansible Inventory with EC2 Information
+  hosts: localhost
+  gather_facts: no
+  tasks:
+
+    - name: Clean the /etc/ansible/hosts file before updating
+      become: yes
+      copy:
+        content: ""
+        dest: /etc/ansible/hosts
+        force: yes
+
+    - name: Run AWS CLI to gather EC2 instance information
+      command: aws ec2 describe-instances --query "Reservations[*].Instances[*].{InstanceId:InstanceId,State:State.Name,Name:Tags[?Key=='Name']|[0].Value,PrivateIp:PrivateIpAddress,PublicIp:PublicIpAddress}" --output json
+      register: ec2_output
+
+    - name: Parse EC2 information
+      set_fact:
+        running_instances: >
+          {%- set instances = [] -%}
+          {%- for instance in ec2_output.stdout | from_json | flatten -%}
+            {%- if instance.State == 'running' and instance.Name != 'AnsibleServer' -%}
+              {{ instances.append({
+                "name": instance.Name,
+                "public_ip": instance.PublicIp
+              }) }}
+            {%- endif -%}
+          {%- endfor -%}
+          {{ instances }}
+
+    - name: Backup existing inventory
+      become: yes
+      copy:
+        src: /etc/ansible/hosts
+        dest: /etc/ansible/hosts.bak
+        remote_src: yes
+
+    - name: Create the updated targets inventory from template
+      become: yes
+      template:
+        src: inventory.j2
+        dest: /etc/ansible/hosts
+
+- name: Test run of an Ansible playbook on the Target servers
+  hosts: targets
+  become: yes
+  vars_files:
+    - variables.yml
+  vars:
+    - ansible_ssh_options: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+  tasks:
+
+    - name: Execute local script one
+      delegate_to: localhost
+      script: "{{ script1_path }}"
+      register: script1_output
+
+    - name: Display output of script one
+      debug:
+        msg: "Script 1 Output: {{ script1_output.stdout }}"
+      when: script1_output.rc == 0
+
+    - name: Install Java 11
+      apt:
+        name: openjdk-11-jdk
+        state: present
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Check Java version
+      shell: java -version
+      register: java_version
+      ignore_errors: yes
+
+    - name: Display Java version
+      debug:
+        msg: "{{ java_version.stdout_lines }}"
+      when: java_version.rc == 0
+
+    - name: Get the hostname
+      command: hostname
+      register: hostname_output
+
+    - name: Display hostname
+      debug:
+        msg: "The hostname of the server is: {{ hostname_output.stdout }}"
+
+    - name: Execute local script two
+      delegate_to: localhost
+      script: "{{ script1_path }}"
+      register: script2_output
+
+    - name: Display output of script two
+      debug:
+        msg: "Script 2 Output: {{ script2_output.stdout }}"
+      when: script2_output.rc == 0
+
+    - name: Print completion message
+      debug:
+        msg: "The playbook has finished on host {{ hostname_output.stdout }}"

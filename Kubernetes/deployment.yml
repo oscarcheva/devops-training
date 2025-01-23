@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+    name: myapp-deployment
+    labels:
+        app: myapp-rc
+        type: front-end
+
+spec:
+    template:
+        metadata:
+            name: my-app
+            labels:
+                app: my-app-pod
+                type: backend
+
+        spec:
+            containers:
+                - name: hello-world-test
+                  image: oscarcheva/hello-world-test
+                  ports:
+                    - containerPort: 8080  # Port exposed in the container
+                  imagePullPolicy: IfNotPresent
+    replicas: 3
+    selector: 
+        matchLabels:
+            type: backend

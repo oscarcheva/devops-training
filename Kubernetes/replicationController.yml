@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ReplicationController
+metadata: 
+    name: myapp-rc
+    labels:
+        app: myapp-rc
+        type: front-end
+
+spec:
+    template:
+        metadata:
+            name: my-app
+            labels:
+                app: my-app-pod
+                type: backend
+
+        spec:
+            containers:
+                - name: hello-world-test
+                  image: oscarcheva/hello-world-test
+                  ports:
+                    - containerPort: 8080  # Port exposed in the container
+                      hostPort: 8082       # Port mapped on the host node
+                  imagePullPolicy: IfNotPresent
+    replicas: 3
