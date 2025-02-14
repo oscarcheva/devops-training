@@ -13,12 +13,12 @@ if [ "${instance_name}" == "AnsibleServer" ]; then
   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
   unzip awscliv2.zip
   sudo ./aws/install
-  aws s3 cp s3://oscar-default-bucket/inventory.j2 /home/ubuntu
-  aws s3 cp s3://oscar-default-bucket/testPlaybook.yml /home/ubuntu
-  aws s3 cp s3://oscar-default-bucket/variables.yml /home/ubuntu
-  aws s3 cp s3://oscar-default-bucket/script1.sh /home/ubuntu
+  aws s3 cp s3://my-tf-bucket-oscar-2/inventory.j2 /home/ubuntu
+  aws s3 cp s3://my-tf-bucket-oscar-2/testPlaybook.yml /home/ubuntu
+  aws s3 cp s3://my-tf-bucket-oscar-2/variables.yml /home/ubuntu
+  aws s3 cp s3://my-tf-bucket-oscar-2/script1.sh /home/ubuntu
   mkdir -p /home/ubuntu/test-project/
-  aws s3 cp s3://oscar-default-bucket/script2.sh /home/ubuntu/test-project/
+  aws s3 cp s3://my-tf-bucket-oscar-2/script2.sh /home/ubuntu/test-project/
 fi
 
 sudo hostnamectl set-hostname ${instance_name}

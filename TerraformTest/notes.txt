@@ -1,0 +1,14 @@
+Functions
+
+-max (1,2,3)
+Output 3
+-file ("./randomFile.txt)"
+
+This is a test paragraph to test the files function
+
+lookup(map,key,default)
+element(list,index)
+formatdate("DD MMM YYYY", date) ## Allows to format a timestamp to more readable patterns this one is an example
+timestamp() ## Provides current timestamp in a weird format
+
+In order to have verbosity when running terraform commands we must set such verbosity in an env variable: TF_LOG=debug

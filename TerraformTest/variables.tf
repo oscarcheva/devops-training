@@ -15,33 +15,29 @@ variable "instance_type" {
 
 variable "instance_name" {
   description = "Instance name"
-  default = "Instance"
+  default     = "Instance"
 }
 
 variable "ami_id" {
   description = "The AMI ID for the EC2 instance"
   type        = string
-  default = "ami-015f3596bb2ef1aaa"
 
 }
 
 variable "ssh_key" {
-  description = "The name of the SSH key pair"
-  type        = string
-  default = "DevOpsKP"
+  description = "The key pair to ssh to instances"
 
 }
 
 variable "iam_role" {
   description = "The role of the instance type"
-  default = "s3BucketManager"
 }
 
 # S3 Bucket Variables
 variable "s3_bucket_name" {
   description = "Name of the S3 bucket"
   type        = string
-  default     = "oscar-default-bucket"
+  default     = "my-tf-bucket-oscar-2"
 
 }
 
