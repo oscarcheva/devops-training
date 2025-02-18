@@ -1,0 +1,31 @@
+pipeline {
+        agent any
+        
+            tools { 
+                maven 'maven' 
+                }
+        
+        stages {
+            stage ('Dev') {
+                steps {
+                    echo 'Hello World'
+                }
+            }
+            stage('Build'){
+                steps{
+                    echo 'Hello Git and Maven'
+                    git branch : '$branch',
+                        url: 'https://github.com/oscarcheva/hello-world-test.git'
+                    sh 'mvn clean install'
+                }
+            }
+            stage('Creating Docker image'){
+                steps{
+                    echo 'Hello Docker'
+                    script{
+                        app = docker.build("oscarcheva/hello-world-test")
+                    }
+                }
+        }
+    }
+}

@@ -1,0 +1,29 @@
+
+pipeline {
+    agent any
+    tools {
+        maven 'Maven'
+    }
+
+    stages {
+        stage('Intro') {
+            steps {
+                  echo "The selected branch is $Branch"
+                  echo "This job will pull a Java app from Git and Build it with Maven"
+            }
+        }
+        stage('Fetch Code') {
+            steps {
+               echo "Pulling from Git"
+                git branch: "$Branch",
+                        url: 'https://github.com/oscarcheva/hello-world-test.git'
+            }
+        }
+            stage('Building code') {
+                steps {
+                    echo 'Building with Maven'
+                    sh 'mvn clean install'
+                }
+            }
+    }
+}
