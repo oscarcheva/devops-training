@@ -29,3 +29,16 @@ terraform{
         }
     }
 }
+
+If there are manual changes and you want to keep them, you can use the lifecycle ignore changes
+
+lifecycle {
+    ignore_changes = [tags]
+}
+
+There are also
+-create before destroy
+- prevent destroy
+- replace triggered by
+
+terraform plan --var-file=_env/awe.tfvars -out tfplan --target="module.core-network"

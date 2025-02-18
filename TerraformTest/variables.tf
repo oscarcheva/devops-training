@@ -1,3 +1,8 @@
+variable "instance_names" {
+  description = "List of instance names"
+  type        = list(string)
+  default     = ["AnsibleServer", "AnsibleTarget", "DockerServer", "JenkinsServer"]
+}
 # AWS Region for the Provider
 variable "aws_region" {
   description = "AWS Region"

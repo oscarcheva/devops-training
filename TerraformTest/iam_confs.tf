@@ -1,5 +1,5 @@
 resource "aws_iam_user" "test_user" {
-  name = "terraformUseggr"
+  name = "terraformUser"
 }
 
 resource "aws_iam_user_policy" "lb_ro" {

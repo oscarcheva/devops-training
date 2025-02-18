@@ -1,8 +1,3 @@
-variable "instance_names" {
-  description = "List of instance names"
-  type        = list(string)
-  default     = ["AnsibleServer", "AnsibleTarget", "DockerServer", "JenkinsServer"]
-}
 
 locals {
   ec2_common_tags = {
@@ -20,7 +15,7 @@ resource "aws_instance" "ec2_instance" {
   subnet_id            = aws_subnet.main_subnet.id
   key_name             = var.ssh_key
   ## count=3
-  tags = merge(local.ec2_common_tags, ##Merge combines several maps to a single map
+  tags = merge(local.ec2_common_tags, ## Merge combines several maps to a single map
     {
       Name = each.key,
     }
