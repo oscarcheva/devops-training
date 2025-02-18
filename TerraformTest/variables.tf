@@ -41,4 +41,10 @@ variable "s3_bucket_name" {
 
 }
 
+variable ports {
+  type = list(number)
+  description = "List of ports"
+  default = [8200,8201,8300,9200,9500]
+}
+
 

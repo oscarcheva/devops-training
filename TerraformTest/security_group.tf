@@ -7,6 +7,16 @@ resource "aws_security_group" "default_sg" {
     Name = "default-sg"
     type = "security-group"
   }
+
+  dynamic "ingress" {
+    for_each = var.ports
+    iterator = port
+    content {
+      from_port         = port.value
+      protocol          = "tcp"
+      to_port           = port.value
+    }
+  }
 }
 
 resource "aws_security_group_rule" "ssh_access" {
@@ -26,3 +36,5 @@ resource "aws_security_group_rule" "outbound_traffic" {
   type              = "egress"
   cidr_blocks       = ["0.0.0.0/0"]
 }
+
+

@@ -28,7 +28,7 @@ resource "aws_instance" "ec2_instance" {
 
   vpc_security_group_ids = [aws_security_group.default_sg.id]
 
-  user_data = templatefile("${path.module}/user_data.sh.tmpl", {
+  user_data = templatefile("${path.module}/resources/user_data.sh.tmpl", {
     instance_name = each.key
   })
 }

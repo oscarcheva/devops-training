@@ -1,0 +1,31 @@
+Functions
+
+-max (1,2,3)
+Output 3
+-file ("./randomFile.txt)"
+
+This is a test paragraph to test the files function
+
+lookup(map,key,default)
+element(list,index)
+formatdate("DD MMM YYYY", date) ## Allows to format a timestamp to more readable patterns this one is an example
+timestamp() ## Provides current timestamp in a weird format
+
+In order to have verbosity when running terraform commands we must set such verbosity in an env variable: TF_LOG=debug
+
+You can use terraform graph to map better in a diagram all the resources you have in your terraform config fiels, the proper command would be:
+terraform graph -type=plan | dot -Tpng >graph.png
+terraform graph -type=plan | dot -Tsvc >graph.svc
+- You have to install graphviz to be able to output properly into a graph the file
+sudo apt install graphviz
+
+You can state a specific version of terraform with
+terraform{
+    required_version = "1.2.3"
+    required_providers {
+        aws= {
+            version = "1.2.3"
+            source = hashicorp/aws
+        }
+    }
+}
