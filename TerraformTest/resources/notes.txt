@@ -42,3 +42,7 @@ There are also
 - replace triggered by
 
 terraform plan --var-file=_env/awe.tfvars -out tfplan --target="module.core-network"
+
+Provisioners
+
+Three main types: local-exec, remote-exec and file-exec

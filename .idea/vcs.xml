@@ -3,8 +3,5 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Jenkins/hello-world-test" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/JenkinsCourse" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/JenkinsCourse/Simple-DevOps-Project" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/JenkinsCourse/hello-world-test" vcs="Git" />
   </component>
 </project>

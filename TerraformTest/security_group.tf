@@ -8,7 +8,7 @@ resource "aws_security_group" "default_sg" {
     type = "security-group"
   }
 
-  dynamic "ingress" {
+/*  dynamic "ingress" {
     for_each = var.ports
     iterator = port
     content {
@@ -16,7 +16,7 @@ resource "aws_security_group" "default_sg" {
       protocol          = "tcp"
       to_port           = port.value
     }
-  }
+  }*/
 }
 
 resource "aws_security_group_rule" "ssh_access" {
@@ -24,6 +24,15 @@ resource "aws_security_group_rule" "ssh_access" {
   protocol          = "tcp"
   security_group_id = aws_security_group.default_sg.id
   to_port           = 22
+  type              = "ingress"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "http_access" {
+  from_port         = 80
+  protocol          = "tcp"
+  security_group_id = aws_security_group.default_sg.id
+  to_port           = 80
   type              = "ingress"
   cidr_blocks       = ["0.0.0.0/0"]
 }
