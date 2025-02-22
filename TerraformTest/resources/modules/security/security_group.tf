@@ -1,7 +1,7 @@
 resource "aws_security_group" "default_sg" {
   name        = "Default security group for new instances"
   description = "Allow basic comms for new servers"
-  vpc_id      = aws_vpc.main_vpc.id
+  vpc_id      = var.main_vpc_id
 
   tags = {
     Name = "default-sg"
@@ -17,6 +17,10 @@ resource "aws_security_group" "default_sg" {
       to_port           = port.value
     }
   }*/
+}
+
+output "security_group_id" {
+  value = aws_security_group.default_sg.id
 }
 
 resource "aws_security_group_rule" "ssh_access" {

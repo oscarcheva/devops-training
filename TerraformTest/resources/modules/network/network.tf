@@ -8,10 +8,14 @@ resource "aws_vpc" "main_vpc" {
   }
 }
 
+output "vpc_id" {
+  value = aws_vpc.main_vpc.id
+}
+
 resource "aws_subnet" "main_subnet" {
   vpc_id                  = aws_vpc.main_vpc.id
   cidr_block              = "10.0.1.0/24"
-  availability_zone       = "sa-east-1a"
+  availability_zone       = "${var.aws_region}a"
   map_public_ip_on_launch = true
 
   tags = {
@@ -35,4 +39,8 @@ resource "aws_route_table" "main_rt" {
 resource "aws_route_table_association" "main_rt_assoc" {
   subnet_id      = aws_subnet.main_subnet.id
   route_table_id = aws_route_table.main_rt.id
+}
+
+output "subnet_id" {
+  value = aws_subnet.main_subnet.id
 }

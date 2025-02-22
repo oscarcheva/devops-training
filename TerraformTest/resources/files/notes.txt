@@ -16,6 +16,7 @@ In order to have verbosity when running terraform commands we must set such verb
 You can use terraform graph to map better in a diagram all the resources you have in your terraform config fiels, the proper command would be:
 terraform graph -type=plan | dot -Tpng >graph.png
 terraform graph -type=plan | dot -Tsvc >graph.svc
+
 - You have to install graphviz to be able to output properly into a graph the file
 sudo apt install graphviz
 
