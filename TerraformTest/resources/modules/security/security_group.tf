@@ -32,6 +32,15 @@ resource "aws_security_group_rule" "ssh_access" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+resource "aws_security_group_rule" "ssh_access_whitelisted_remote_state_ip_address" {
+  from_port         = 22
+  protocol          = "tcp"
+  security_group_id = aws_security_group.default_sg.id
+  to_port           = 22
+  type              = "ingress"
+  cidr_blocks       = ["${data.terraform_remote_state.remote_state_data_source.outputs.eip_lb}/32"]
+}
+
 resource "aws_security_group_rule" "http_access" {
   from_port         = 80
   protocol          = "tcp"

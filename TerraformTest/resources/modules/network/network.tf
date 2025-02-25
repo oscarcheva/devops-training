@@ -44,3 +44,11 @@ resource "aws_route_table_association" "main_rt_assoc" {
 output "subnet_id" {
   value = aws_subnet.main_subnet.id
 }
+
+resource "aws_eip" "lb" {
+  domain   = "vpc"
+}
+
+output "eip_lb_value"{
+  value = aws_eip.lb.public_ip
+}

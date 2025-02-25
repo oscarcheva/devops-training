@@ -5,6 +5,11 @@ terraform {
       version = "6.2.2"
     }
   }
+  backend "s3" {
+    bucket = "my-tf-bucket-sa-east-1"
+    key    = "tfState/terraform.tfstate"
+    region = "sa-east-1"
+  }
 }
 
 provider "aws" {
@@ -29,6 +34,9 @@ module network {
   aws_region = var.aws_region
 }
 
+output "eip_lb" {
+  value = module.network.eip_lb_value
+}
 
 module s3_buckets {
   source         = "./resources/modules/buckets"
