@@ -4,6 +4,7 @@ locals {
     Environment = "Test",
     Owner       = "Oscar"
     LastUpdate  = "(UY Time) - ${formatdate("DD-MMM-YYYY hh:mm", timeadd(timestamp(), "-3h"))}"
+
   }
 }
 

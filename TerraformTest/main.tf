@@ -10,7 +10,16 @@ terraform {
     key    = "tfState/terraform.tfstate"
     region = "sa-east-1"
   }
+/*  cloud {
+
+    organization = "testHCPOscar"
+
+    workspaces {
+      name = "CLIDrivenWorkspace"
+    }
+  }*/
 }
+
 
 provider "aws" {
   region = var.aws_region

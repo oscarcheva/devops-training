@@ -51,11 +51,17 @@ public class Main {
     public static void duplicatesChecker(List<Integer> list) {
         List<Integer> mutableList = new ArrayList<>(list);
         Collections.sort(mutableList);
+        for (Integer num: mutableList)
+        {
+            mutableList.
+        }
+
         for (int i = 0; i < list.size() - 1; i++) {
             if (Objects.equals(mutableList.get(i), mutableList.get(i + 1))) {
                 System.out.println(mutableList.get(i) + " is a duplicate!");
             }
         }
+
 
     }
 

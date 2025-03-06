@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Jenkins/Second Jenkis Course/install-jenkins-docker" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Jenkins/hello-world-test" vcs="Git" />
   </component>
 </project>
