@@ -46,7 +46,7 @@ public class Main {
 
             choice = startGame();
             if (bet > 200 && !hit && choice == 4) {
-                while (choice != 4) {
+                while (choice != 3) {
                     System.out.println("You are a proud person so you cannot leave, you must play again");
                     choice = startGame();
                 }
